@@ -21,18 +21,25 @@ The service handles the following core responsibilities:
 This microservice allows the main application to offload image processing tasks and maintain a cleaner architecture.
 
 
+
 Key Features
 
 •	Supports JPEG, PNG, and WebP file formats.
+
 •	Accepts up to 3 images per itemId.
+
 •	Optional normalization, sharpening, and color modulation.
+
 •	Produces:
-o	Original full-resolution image
-o	Medium version (max 1200px)
+
+    o	Original full-resolution image
+    o	Medium version (max 1200px)
+    
 o	Thumbnail version (max 320px)
-•	JSON-based metadata storage (easily replaceable with a database).
-•	Integrated test interface using EJS.
-•	CORS-configurable for local or remote clients.
+
+    •	JSON-based metadata storage (easily replaceable with a database).
+    •	Integrated test interface using EJS.
+    •	CORS-configurable for local or remote clients.
 
 
 Project Structure
@@ -54,11 +61,11 @@ Project Structure
 Setup and Installation
 
 1.	Install Node.js (v18 or higher recommended).
-2.	Clone the repository.
-3.	Run: npm install
-4.	Create a .env file or use the provided .env.example.
-5.	Start the microservice: node server.js
-6.	Open the browser and navigate to: http://localhost:4001/test
+3.	Clone the repository.
+4.	Run: npm install
+5.	Create a .env file or use the provided .env.example.
+6.	Start the microservice: node server.js
+7.	Open the browser and navigate to: http://localhost:4001/test
 
 
 API Endpoints
@@ -105,28 +112,52 @@ A main application can upload an image using Axios:
 Deployment Guide
 
 Local Development
+
 •	Run node server.js
+
 •	Access the test interface at /test
+
 •	Configure main app with:
+
 •	MEDIA_SERVICE_BASE=http://localhost:4001
 
+
 OSU ENGR Server (SSH Tunnel Required)
+
 1.	SSH into ENGR:
 2.	ssh your_onid@access.engr.oregonstate.edu
 3.	Run the microservice
 4.	Tunnel from your local machine:
 5.	ssh your_onid@access.engr.oregonstate.edu -L 4001:localhost:4001
+
+   
 Render.com Deployment
+
 •	Build command: npm install
+
 •	Start command: node server.js
+
 •	Set PORT environment variable
+
 •	Use Render URL as MEDIA_SERVICE_BASE
 
+
 Testing Tools
+
 The integrated test.ejs page supports:
+
 •	Manual image uploads
+
 •	Listing media by itemId
+
 •	Viewing thumbnails/medium/original
+
 •	Deleting images
+
 This enables quick validation without needing the main application.
+
+
+Conclusion
+
+The Image Upload Microservice serves as a flexible, reusable backend component for applications requiring image processing. By handling uploads, resizing, enhancement, and metadata management, it simplifies the responsibilities of the main application and supports clean CS361 microservice architecture.
 
