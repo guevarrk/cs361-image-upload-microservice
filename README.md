@@ -157,7 +157,5 @@ The integrated test.ejs page supports:
 This enables quick validation without needing the main application.
 
 
-Conclusion
-
 The Image Upload Microservice serves as a flexible, reusable backend component for applications requiring image processing. By handling uploads, resizing, enhancement, and metadata management, it simplifies the responsibilities of the main application and supports clean CS361 microservice architecture.
 
