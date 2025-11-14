@@ -52,13 +52,13 @@ image-upload-microservice//
 ├── package.json # Dependencies and scripts  
 ├── .env # Environment variables (not committed)  
 ├── data/  
-│ └── media.json # Image metadata storage  
+│    └── media.json # Image metadata storage  
 ├── storage/  
-│ ├── original/ # Full-resolution images  
-│ ├── medium/ # Resized 1200px images  
-│ └── thumb/ # Thumbnails (max 320px)  
+│    ├── original/ # Full-resolution images  
+│    ├── medium/ # Resized 1200px images  
+│    └── thumb/ # Thumbnails (max 320px)  
 ├── views/  
-│ └── test.ejs # Integrated test page  
+│    └── test.ejs # Integrated test page  
 └── README.md # Documentation
 
 
