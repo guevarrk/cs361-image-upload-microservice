@@ -1,4 +1,4 @@
-Image Upload Microservice
+**Image Upload Microservice**
 
 Overview
 The Image Upload Microservice is a standalone Node.js service designed to support external applications requiring image uploads, resizing, and optional auto-enhancement. It is adaptable to multiple CS361 projects, including inventory management systems, study trackers, budget trackers, and similar applications requiring image processing.
@@ -65,24 +65,24 @@ DELETE /media/:id
 
 Integration Example
 A main application can upload an image using Axios:
-const axios = require('axios');
-const FormData = require('form-data');
-const fs = require('fs');
-
-async function uploadPhoto(photoPath, itemId) {
-  const fd = new FormData();
-  fd.append('photo', fs.createReadStream(photoPath));
-  fd.append('itemId', itemId);
-  fd.append('enhance', 'true');
-
-  const res = await axios.post(
-    process.env.MEDIA_SERVICE_BASE + '/media/upload',
-    fd,
-    { headers: fd.getHeaders() }
-  );
-
-  	return res.data;
-}
+		const axios = require('axios');
+		const FormData = require('form-data');
+		const fs = require('fs');
+	
+	async function uploadPhoto(photoPath, itemId) {
+	  const fd = new FormData();
+	  fd.append('photo', fs.createReadStream(photoPath));
+	  fd.append('itemId', itemId);
+	  fd.append('enhance', 'true');
+	
+	  const res = await axios.post(
+	    process.env.MEDIA_SERVICE_BASE + '/media/upload',
+	    fd,
+	    { headers: fd.getHeaders() }
+	  );
+	
+	  	return res.data;
+	}
 
 Deployment Guide
 
@@ -98,6 +98,7 @@ OSU ENGR Server (SSH Tunnel Required)
 3.	Run the microservice
 4.	Tunnel from your local machine:
 5.	ssh your_onid@access.engr.oregonstate.edu -L 4001:localhost:4001
+
 Render.com Deployment
 •	Build command: npm install
 •	Start command: node server.js
