@@ -49,16 +49,22 @@ This microservice allows the main application to offload image processing tasks 
 
 image-upload-microservice//  
 ├── server.js # Main server logic  
+|  
 ├── package.json # Dependencies and scripts  
+|  
 ├── .env # Environment variables (not committed)  
+|  
 ├── data/  
 │    └── media.json # Image metadata storage  
+|  
 ├── storage/  
 │    ├── original/ # Full-resolution images  
 │    ├── medium/ # Resized 1200px images  
 │    └── thumb/ # Thumbnails (max 320px)  
+|  
 ├── views/  
 │    └── test.ejs # Integrated test page  
+|  
 └── README.md # Documentation
 
 
