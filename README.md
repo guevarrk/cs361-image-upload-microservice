@@ -22,7 +22,7 @@ This microservice allows the main application to offload image processing tasks 
 
 
 
-Key Features
+###Key Features
 
 - Supports JPEG, PNG, and WebP file formats.
 
@@ -42,19 +42,25 @@ Key Features
     - CORS-configurable for local or remote clients.
 
 
+
+
 ## Project Directory Structure
 
-image-upload-microservice/
-|_____server.js
-|_____.env
-|_____data/
-|	|______media.json
-|______storage/
-|	|______original/
-|	|______medium/
-|	|______thumb/
-|______views/
-    |______test.ejs
+
+image-upload-microservice//
+├── server.js # Main server logic
+├── package.json # Dependencies and scripts
+├── .env # Environment variables (not committed)
+├── data/
+│ └── media.json # Image metadata storage
+├── storage/
+│ ├── original/ # Full-resolution images
+│ ├── medium/ # Resized 1200px images
+│ └── thumb/ # Thumbnails (max 320px)
+├── views/
+│ └── test.ejs # Integrated test page
+└── README.md # Documentation
+
 
 
 
@@ -68,7 +74,7 @@ image-upload-microservice/
 7.	Open the browser and navigate to: http://localhost:4001/test
 
 
-API Endpoints
+### API Endpoints
 
 1. Service Health
 GET /health
@@ -85,6 +91,8 @@ GET /media/by-item/:itemId
 GET /media/:id?variant=original|medium|thumb
 5. Delete an Image
 DELETE /media/:id
+
+
 
 
 ## Usage
@@ -112,7 +120,7 @@ async function uploadPhoto(photoPath, itemId) {
 }
 ```
 
-Deployment Guide
+### Deployment Guide
 
 Local Development
 
@@ -125,7 +133,9 @@ Local Development
 - MEDIA_SERVICE_BASE=http://localhost:4001
 
 
-OSU ENGR Server (SSH Tunnel Required)
+
+
+### OSU ENGR Server (SSH Tunnel Required)
 
 1.	SSH into ENGR:
 2.	ssh your_onid@access.engr.oregonstate.edu
@@ -133,8 +143,9 @@ OSU ENGR Server (SSH Tunnel Required)
 4.	Tunnel from your local machine:
 5.	ssh your_onid@access.engr.oregonstate.edu -L 4001:localhost:4001
 
+
    
-Render.com Deployment
+### Render.com Deployment
 
 - Build command: npm install
 
@@ -145,7 +156,8 @@ Render.com Deployment
 - Use Render URL as MEDIA_SERVICE_BASE
 
 
-Testing Tools
+
+### Testing Tools
 
 The integrated test.ejs page supports:
 
@@ -160,7 +172,10 @@ The integrated test.ejs page supports:
 This enables quick validation without needing the main application.
 
 
+
+
 ## License
+
 
 MIT License
 Copyright (c) 2025 Kristian Guevarra and Fu Shing Kong (Sam) 
@@ -184,6 +199,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 This project is license under the MIT License. You are free to use, modify, and distribute this software for any purpose, including commercial applications, as long as the original copyright notice is included.
+
+
 
 
 ## Authors
