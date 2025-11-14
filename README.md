@@ -23,18 +23,19 @@ o	Thumbnail version (max 320px)
 •	Integrated test interface using EJS.
 •	CORS-configurable for local or remote clients.
 
+
 Project Structure
 image-upload-microservice/
-|_____server.js
-|_____.env
-|_____data/
-|	|______media.json
-|______storage/
-|	|______original/
-|	|______medium/
-|	|______thumb/
-|______views/
-	|______test.ejs
+	server.js
+	.env
+	data/
+		media.json
+	storage/
+		original/
+		medium/
+		thumb/
+	views/
+		test.ejs
 
 
 
