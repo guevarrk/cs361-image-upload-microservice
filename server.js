@@ -1,3 +1,6 @@
+require('dotenv').config();
+const PORT = process.env.PORT || 4001;
+
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs-extra');
@@ -8,10 +11,10 @@ const { v4: uuidv4 } = require('uuid');
 const mime = require('mime');
 
 const app = express();
-const PORT = process.env.PORT || 4001;
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 
-// use http://localhost:3000
-app.use(cors({ origin: ['http://localhost:3000'] }));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Folders
 const DATA_DIR = path.join(__dirname, 'data');
@@ -133,5 +136,12 @@ app.post('/media/upload', upload.single('photo'), async (req,res)=>{
     res.status(500).json({ error: 'internal error' });
   }
 });
+
+// Minimal integrated test page
+app.get(['/','/test'], (_req, res) => {
+  // Default itemId you can change in the form
+  res.render('test', { defaultItemId: 'testItem1' });
+});
+
 
 app.listen(PORT, ()=>console.log(`Media Service running at http://localhost:${PORT}`));
