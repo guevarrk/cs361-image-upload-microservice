@@ -22,7 +22,7 @@ This microservice allows the main application to offload image processing tasks 
 
 
 
-###Key Features
+### Key Features
 
 - Supports JPEG, PNG, and WebP file formats.
 
