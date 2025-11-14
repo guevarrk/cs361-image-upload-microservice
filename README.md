@@ -1,6 +1,8 @@
 Image Upload Microservice
 
+
 Overview
+
 The Image Upload Microservice is a standalone Node.js service designed to support external applications requiring image uploads, resizing, and optional auto-enhancement. It is adaptable to multiple CS361 projects, including inventory management systems, study trackers, budget trackers, and similar applications requiring image processing.
 The service handles the following core responsibilities:
 •	Accepting uploaded image files through a REST API.
@@ -11,7 +13,9 @@ The service handles the following core responsibilities:
 •	Providing retrieval and deletion endpoints for client applications.
 This microservice allows the main application to offload image processing tasks and maintain a cleaner architecture.
 
+
 Key Features
+
 •	Supports JPEG, PNG, and WebP file formats.
 •	Accepts up to 3 images per itemId.
 •	Optional normalization, sharpening, and color modulation.
@@ -41,6 +45,7 @@ Project Structure
 
 
 Setup and Installation
+
 1.	Install Node.js (v18 or higher recommended).
 2.	Clone the repository.
 3.	Run: npm install
@@ -48,7 +53,9 @@ Setup and Installation
 5.	Start the microservice: node server.js
 6.	Open the browser and navigate to: http://localhost:4001/test
 
+
 API Endpoints
+
 1. Service Health
 GET /health
 Returns a simple JSON response confirming that the service is running.
@@ -65,7 +72,9 @@ GET /media/:id?variant=original|medium|thumb
 5. Delete an Image
 DELETE /media/:id
 
+
 Integration Example
+
 A main application can upload an image using Axios:
 
     const axios = require('axios');
