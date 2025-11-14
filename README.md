@@ -43,7 +43,7 @@ This microservice allows the main application to offload image processing tasks 
 
 
 
-
+    
 ## Project Directory Structure
 
 
@@ -69,7 +69,7 @@ This microservice allows the main application to offload image processing tasks 
 
 
 
-
+    
 ## Setup and Installation
 
 1.	Install Node.js (v18 or higher recommended).
@@ -100,7 +100,7 @@ DELETE /media/:id
 
 
 
-
+    
 ## Usage
 
 Integration Example
@@ -179,7 +179,7 @@ This enables quick validation without needing the main application.
 
 
 
-
+    
 ## License
 
 
@@ -208,7 +208,7 @@ This project is license under the MIT License. You are free to use, modify, and 
 
 
 
-
+    
 ## Authors
 
 This project was developed collaboratively by the following CS361 students:
