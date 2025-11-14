@@ -1,7 +1,7 @@
-Image Upload Microservice
+# Image Upload Microservice
 
 
-Overview
+## Description
 
 The Image Upload Microservice is a standalone Node.js service designed to support external applications requiring image uploads, resizing, and optional auto-enhancement. It is adaptable to multiple CS361 projects, including inventory management systems, study trackers, budget trackers, and similar applications requiring image processing.
 The service handles the following core responsibilities:
@@ -42,7 +42,7 @@ o	Thumbnail version (max 320px)
     •	CORS-configurable for local or remote clients.
 
 
-Project Structure
+## Project Directory Structure
 
     image-upload-microservice/
     |_____server.js
@@ -58,7 +58,7 @@ Project Structure
 
 
 
-Setup and Installation
+## Setup and Installation
 
 1.	Install Node.js (v18 or higher recommended).
 3.	Clone the repository.
@@ -86,6 +86,8 @@ GET /media/:id?variant=original|medium|thumb
 5. Delete an Image
 DELETE /media/:id
 
+
+## Usage
 
 Integration Example
 
@@ -155,7 +157,4 @@ The integrated test.ejs page supports:
 •	Deleting images
 
 This enables quick validation without needing the main application.
-
-
-The Image Upload Microservice serves as a flexible, reusable backend component for applications requiring image processing. By handling uploads, resizing, enhancement, and metadata management, it simplifies the responsibilities of the main application and supports clean CS361 microservice architecture.
 
