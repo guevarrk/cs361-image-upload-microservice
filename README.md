@@ -32,8 +32,8 @@ This microservice allows the main application to offload image processing tasks 
 
 - Produces:
 
-    -Original full-resolution image
-    -Medium version (max 1200px)
+    - Original full-resolution image
+    - Medium version (max 1200px)
     
 - Thumbnail version (max 320px)
 
@@ -69,10 +69,21 @@ This microservice allows the main application to offload image processing tasks 
 
 
 
+
+## Tech Stack
+
+- Node.js (v18+)
+- Express.js
+- Multer (file uploads)
+- Sharp (image processing)
+- EJS (test interface)
+- JSON file storage (`data/media.json`)
+
+
     
 ## Setup and Installation
 
-1.	Install Node.js (v18 or higher recommended).
+1.	Install Node.js (v20 or higher recommended).
 3.	Clone the repository.
 4.	Run: npm install
 5.	Create a .env file or use the provided .env.example.
@@ -80,22 +91,52 @@ This microservice allows the main application to offload image processing tasks 
 7.	Open the browser and navigate to: http://localhost:4001/test
 
 
+### Configuration
+
+| Variable           | Required | Default | Description                                   |
+|--------------------|----------|---------|-----------------------------------------------|
+| PORT               | No       | 4001    | Port the microservice listens on              |
+| CORS_ORIGIN        | No       | *\**    | Allowed origin(s) for CORS                    |
+| MEDIA_SERVICE_BASE | No       | —       | Used by client app to build request URLs      |
+
+
 ### API Endpoints
 
 1. Service Health
 GET /health
 Returns a simple JSON response confirming that the service is running.
-2. Upload Image
-POST /media/upload
-Form fields:
-photo — Image file (required)
-itemId — Associated record ID (required)
-enhance — Boolean flag (true or false)
-3. Retrieve Images for an Item
+2. Upload Image    
+#### POST /media/upload        
+
+- Form-data fields:
+  - `photo` (file, required) — JPEG/PNG image
+  - `itemId` (string, required) — ID of associated item
+  - `enhance` (boolean, optional) — `"true"` to apply auto enhancement
+
+**Responses:**
+
+- `201 Created` with JSON:
+  ```json
+  {
+    "id": "uuid",
+    "itemId": "123",
+    "paths": {
+      "original": "/media/file.jpg",
+      "medium": "/media/file_medium.jpg",
+      "thumb": "/media/file_thumb.jpg"
+    }
+  }
+
+- 400 Bad Request if photo or itemId is missing
+- 422 Unprocessable Entity if the item already has 3 images
+
+
+
+4. Retrieve Images for an Item
 GET /media/by-item/:itemId
-4. Retrieve a Single Image
+5. Retrieve a Single Image
 GET /media/:id?variant=original|medium|thumb
-5. Delete an Image
+6. Delete an Image
 DELETE /media/:id
 
 
@@ -137,29 +178,6 @@ Local Development
 - Configure main app with:
 
 - MEDIA_SERVICE_BASE=http://localhost:4001
-
-
-
-
-### OSU ENGR Server (SSH Tunnel Required)
-
-1.	SSH into ENGR:
-2.	ssh your_onid@access.engr.oregonstate.edu
-3.	Run the microservice
-4.	Tunnel from your local machine:
-5.	ssh your_onid@access.engr.oregonstate.edu -L 4001:localhost:4001
-
-
-   
-### Render.com Deployment
-
-- Build command: npm install
-
-- Start command: node server.js
-
-- Set PORT environment variable
-
-- Use Render URL as MEDIA_SERVICE_BASE
 
 
 
