@@ -5,12 +5,19 @@ Overview
 
 The Image Upload Microservice is a standalone Node.js service designed to support external applications requiring image uploads, resizing, and optional auto-enhancement. It is adaptable to multiple CS361 projects, including inventory management systems, study trackers, budget trackers, and similar applications requiring image processing.
 The service handles the following core responsibilities:
+
 •	Accepting uploaded image files through a REST API.
+
 •	Generating medium and thumbnail versions of each uploaded image.
+
 •	Applying optional automatic enhancement (brightness, sharpness, saturation).
+
 •	Storing metadata about uploaded images.
+
 •	Limiting images to three per associated item or record.
+
 •	Providing retrieval and deletion endpoints for client applications.
+
 This microservice allows the main application to offload image processing tasks and maintain a cleaner architecture.
 
 
