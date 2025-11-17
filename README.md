@@ -3,32 +3,22 @@
 
 ## Description
 
-The Image Upload Microservice is a standalone Node.js service designed to support external applications requiring image uploads, resizing, and optional auto-enhancement. It is adaptable to multiple CS361 projects, including inventory management systems, study trackers, budget trackers, and similar applications requiring image processing.
-The service handles the following core responsibilities:
+The Image Upload Microservice is a standalone Node.js service designed to support external applications requiring image uploads, resizing, and optional auto-enhancement.
+The service handles the following core responsibilities. It is adaptable to multiple applications like
 
-- Accepting uploaded image files through a REST API.
+- Inventory management systems
+- Study trackers
+- Budget trackers
+- And projects that will need image processing
 
-- Generating medium and thumbnail versions of each uploaded image.
+### Core Responsibilities and Features:  
 
-- Applying optional automatic enhancement (brightness, sharpness, saturation).
-
-- Storing metadata about uploaded images.
-
-- Limiting images to three per associated item or record.
-
-- Providing retrieval and deletion endpoints for client applications.
-
-This microservice allows the main application to offload image processing tasks and maintain a cleaner architecture.
-
-
-
-### Key Features
-
-- Supports JPEG, PNG, and WebP file formats.
-
-- Accepts up to 3 images per itemId.
-
-- Optional normalization, sharpening, and color modulation.
+- Accept uploaded image files via REST API
+- Generate medium and thumbnail versions
+- Apply optional automatic enhancement
+- Store metadata in JSON format
+- Limit images to 3 per itermId
+- Provide retrieval and deletion endpoints  
 
 - Produces:
 
@@ -42,6 +32,75 @@ This microservice allows the main application to offload image processing tasks 
     - CORS-configurable for local or remote clients.
 
 
+## Communication Contract
+
+Defines the fixed API contract used by the main program. Once it is established, the contract will not change.
+
+### REQUEST: Programmatically Sending Data to the Microservice 
+POST /media/upload    
+
+Form-data fields:    
+
+Field: photo        Required: Yes    Description: Image file(JPEG, PNG, WebP)  
+Field: itemId       Required: Yes    Description: ID of associated item  
+Field: enhance      Required: Yes    Description: "true" to apply enhancehament  
+
+#### Example Request (Node.js)  
+``` js
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+
+async function uploadPhoto(photoPath, itemId) {
+  const fd = new FormData();
+  fd.append('photo', fs.createReadStream(photoPath));
+  fd.append('itemId', itemId);
+  fd.append('enhance', 'true');
+
+  const res = await axios.post(
+    process.env.MEDIA_SERVICE_BASE + '/media/upload',
+    fd,
+    { headers: fd.getHeaders() }
+  );
+
+  return res.data;
+}
+
+```
+
+### RESPONSE: Receiving Data From the Microservice  
+
+JSON Response Example  
+
+``` json
+{
+  "id": "uuid",
+  "itemId": "123",
+  "paths": {
+    "original": "/media/file.jpg",
+    "medium": "/media/file_medium.jpg",
+    "thumb": "/media/file_thumb.jpg"
+  }
+}
+```
+
+#### Error Responses  
+
+Status: 400 Bad Request - Missing photo or itemId  
+Status: 422 Unprocessable Entity - More than 3 images are already uploaded  
+
+
+### Additional Endpoints   
+
+- GET /health                                     : Returns service status.
+- GET /media/by-item/:itemid                      : Returns all media entries for an item.  
+- GET /media/:id?variant=original|medium|thumb    : Returns an image file.
+- DELETE /media/:id                               : Deletes a media entry.
+
+
+  ## UML Sequence Diagram
+  ![UML Diagram](UML_Diagram.png)
+  
 
     
 ## Project Directory Structure
