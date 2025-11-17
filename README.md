@@ -103,6 +103,38 @@ Status: 422 Unprocessable Entity - More than 3 images are already uploaded
   
 
     
+
+## Tech Stack
+
+- Node.js (v18+)
+- Express.js
+- Multer (file uploads)
+- Sharp (image processing)
+- EJS (test interface)
+- JSON file storage (`data/media.json`)
+
+
+    
+## Setup and Installation
+
+1.	Install Node.js (v20 or higher recommended).
+3.	Clone the repository.
+4.	Run: npm install
+5.	Create a .env file or use the provided .env.example.
+6.	Start the microservice: node server.js
+7.	Open the browser and navigate to: http://localhost:4001/test
+
+
+## Configuration
+
+| Variable           | Required | Default | Description                                   |
+|--------------------|----------|---------|-----------------------------------------------|
+| PORT               | No       | 4001    | Port the microservice listens on              |
+| CORS_ORIGIN        | No       | *\**    | Allowed origin(s) for CORS                    |
+| MEDIA_SERVICE_BASE | No       | —       | Used by client app to build request URLs      |
+
+
+
 ## Project Directory Structure
 
 
@@ -128,121 +160,9 @@ Status: 422 Unprocessable Entity - More than 3 images are already uploaded
 
 
 
+## Testing Tools
 
-## Tech Stack
-
-- Node.js (v18+)
-- Express.js
-- Multer (file uploads)
-- Sharp (image processing)
-- EJS (test interface)
-- JSON file storage (`data/media.json`)
-
-
-    
-## Setup and Installation
-
-1.	Install Node.js (v20 or higher recommended).
-3.	Clone the repository.
-4.	Run: npm install
-5.	Create a .env file or use the provided .env.example.
-6.	Start the microservice: node server.js
-7.	Open the browser and navigate to: http://localhost:4001/test
-
-
-### Configuration
-
-| Variable           | Required | Default | Description                                   |
-|--------------------|----------|---------|-----------------------------------------------|
-| PORT               | No       | 4001    | Port the microservice listens on              |
-| CORS_ORIGIN        | No       | *\**    | Allowed origin(s) for CORS                    |
-| MEDIA_SERVICE_BASE | No       | —       | Used by client app to build request URLs      |
-
-
-### API Endpoints
-
-1. Service Health
-GET /health
-Returns a simple JSON response confirming that the service is running.
-2. Upload Image    
-#### POST /media/upload        
-
-- Form-data fields:
-  - `photo` (file, required) — JPEG/PNG image
-  - `itemId` (string, required) — ID of associated item
-  - `enhance` (boolean, optional) — `"true"` to apply auto enhancement
-
-**Responses:**
-
-- `201 Created` with JSON:
-  ```json
-  {
-    "id": "uuid",
-    "itemId": "123",
-    "paths": {
-      "original": "/media/file.jpg",
-      "medium": "/media/file_medium.jpg",
-      "thumb": "/media/file_thumb.jpg"
-    }
-  }
-
-- 400 Bad Request if photo or itemId is missing
-- 422 Unprocessable Entity if the item already has 3 images
-
-
-
-4. Retrieve Images for an Item
-GET /media/by-item/:itemId
-5. Retrieve a Single Image
-GET /media/:id?variant=original|medium|thumb
-6. Delete an Image
-DELETE /media/:id
-
-
-
-    
-## Usage
-
-Integration Example
-
-A main application can upload an image using Axios:
-
-```bash
-const axios = require('axios');
-const FormData = require('form-data');
-const fs = require('fs');
-async function uploadPhoto(photoPath, itemId) {
-  const fd = new FormData();
-  fd.append('photo', fs.createReadStream(photoPath));
-  fd.append('itemId', itemId);
-  fd.append('enhance', 'true');
-  const res = await axios.post(
-    process.env.MEDIA_SERVICE_BASE + '/media/upload',
-    fd,
-    { headers: fd.getHeaders() }
-  );
-
-    return res.data;
-}
-```
-
-### Deployment Guide
-
-Local Development
-
-- Run node server.js
-
-- Access the test interface at /test
-
-- Configure main app with:
-
-- MEDIA_SERVICE_BASE=http://localhost:4001
-
-
-
-### Testing Tools
-
-The integrated test.ejs page supports:
+The integrated test.ejs page (/test) supports:
 
 - Manual image uploads
 
@@ -254,6 +174,22 @@ The integrated test.ejs page supports:
 
 This enables quick validation without needing the main application.
 
+
+
+
+## Deployment Guide  
+
+Set your main application to use by placing the following in the .env file:  
+
+``` ini
+MEDIA_SERVICE_BASE=http://localhost:4001
+```
+
+### Local Development
+
+- Run node server.js
+
+- Access the test interface at /test  
 
 
     
