@@ -98,7 +98,58 @@ Status: 422 Unprocessable Entity - More than 3 images are already uploaded
 - DELETE /media/:id                               : Deletes a media entry.
 
 
-  ## UML Sequence Diagram
+### Using This Microservice For Your Application  
+
+To integrate this image uploader microservice with your application, use an HTTP proxy so your application can forward all image related requests to this microservice.  
+
+#### Requirements  
+
+Install the proxy middleware in your application.  
+
+```
+npm install http-proxy-middleware
+```
+
+#### Proxy Setup In Your Application  
+
+Add the following to your application server file:
+
+``` js
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+// Proxy for Image Uploader Microservice
+app.use('/image', createProxyMiddleware({
+  target: 'http://localhost:4001',
+  changeOrigin: true,
+  pathRewrite: { '^/image': '' }
+}));
+
+```
+
+#### How It Works  
+ Any request that begins with "/image" is forwarded directly to the image uploader microservice running on Port 4001.  
+
+| Application Route    | Image Uploader Microservice Route |
+|----------------------|-----------------------------------|
+| /image/upload        | /upload                           |
+| /image/media/mediaId | /media/mediaId                    | 
+| /image/test          | /test                             |
+
+
+#### Client Example  
+
+For your application, you can upload an image like this:
+
+``` js
+fetch('/image/upload', {
+  method: 'POST',
+  body: formData
+});
+
+```
+
+
+## UML Sequence Diagram
   ![UML Diagram](UML_Diagram.png)
   
 
@@ -189,7 +240,7 @@ MEDIA_SERVICE_BASE=http://localhost:4001
 
 - Run node server.js
 
-- Access the test interface at /test  
+- Access the test interface at /test
 
 
     
