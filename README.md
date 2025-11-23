@@ -98,9 +98,9 @@ Status: 422 Unprocessable Entity - More than 3 images are already uploaded
 - DELETE /media/:id                               : Deletes a media entry.
 
 
-### Using This Microservice For Your Application  
+### Using This Microservice For Your Application via PROXY 
 
-To integrate this image uploader microservice with your application, use an HTTP proxy so your application can forward all image related requests to this microservice.  
+To integrate this image uploader microservice with your application via PROXY, use an HTTP proxy so your application can forward all image related requests to this microservice.  
 
 #### Requirements  
 
