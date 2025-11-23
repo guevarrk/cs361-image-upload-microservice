@@ -10,8 +10,6 @@ const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const mime = require('mime');
 
-const processImage = require('./utils/imageProcessor');
-const storeMetadata = require('./utils/metadata');
 
 const app = express();
 //app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
@@ -101,39 +99,107 @@ app.get(['/','/test'], (_req, res) => {
 });
 
 
-app.post('/upload', upload.single('image'), async (req, res) => {
+// breaking up the post upload route to individual functions for clarity
+
+function validatePayload(req) {
+  const itemId = String(req.body.itemId || '').trim();
+  const enhance = String(req.body.enhance || 'false').toLowerCase() === 'true';
+
+  if (!itemId) return { error: 'itemId required' };
+  if (!req.file) return { error: 'photo file required' };
+
+  return { itemId, enhance };
+}
+
+// 3 photos limit per item
+function enforceItemLimit(db, itemId) {
+  const count = db.media.filter(m => m.itemId === itemId).length;
+  return count >= 3 ? { error: 'Max 3 photos per item' } : null;
+}
+
+// id creation and extension
+function generateIdAndExt(file) {
+  const id = 'm_' + uuidv4().replace(/-/g, '').slice(0, 12);
+  const ext =
+    file.mimetype === 'image/png'  ? 'png'  :
+    file.mimetype === 'image/webp' ? 'webp' : 'jpg';
+  return { id, ext };
+}
+
+//image buffer
+async function createOriginal(file, ext, enhance) {
+  let img = sharp(file.buffer, { failOn: 'none' });
+  if (enhance) img = img.normalize().sharpen().modulate({ saturation: 1.05, brightness: 1.02 });
+  return img.toFormat(ext, { quality: 90 }).toBuffer();
+}
+
+//medium version
+async function createMedium(buffer, id, ext, enhance) {
+  let img = sharp(buffer).resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true });
+  if (enhance) img = img.normalize().sharpen();
+  return img.toFormat(ext, { quality: 85 }).toFile(path.join(STORAGE.medium, `${id}.${ext}`));
+}
+
+//thumbnail creation
+async function createThumb(buffer, id, ext, enhance) {
+  let img = sharp(buffer).resize({ width: 320, height: 320, fit: 'inside', withoutEnlargement: true });
+  if (enhance) img = img.normalize().sharpen();
+  return img.toFormat(ext, { quality: 80 }).toFile(path.join(STORAGE.thumb, `${id}.${ext}`));
+}
+
+//metadata entry
+async function createMetadata(buffer, id, itemId, ext) {
+  const meta = await sharp(buffer).metadata();
+  return {
+    id,
+    itemId,
+    ext,
+    created_at: new Date().toISOString(),
+    width: meta.width || null,
+    height: meta.height || null,
+    size: buffer.length
+  };
+}
+
+//post upload route
+app.post('/media/upload', upload.single('photo'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
+    const { itemId, enhance, error } = validatePayload(req);
+    if (error) return res.status(400).json({ error });
 
-    const result = await processImage(
-      req.file.path,
-      STORAGE
-    );
+    const db = loadMeta();
+    const limitErr = enforceItemLimit(db, itemId);
+    if (limitErr) return res.status(400).json(limitErr);
 
-    const entry = {
-      id: result.id,
-      itemid: req.body.itemid || null,
-      timestamp: new Date().toISOString()
-    };
+    const { id, ext } = generateIdAndExt(req.file);
 
-    await storeMetadata(META_PATH, entry);
+    const originalBuffer = await createOriginal(req.file, ext, enhance);
+    await createMedium(originalBuffer, id, ext, enhance);
+    await createThumb(originalBuffer, id, ext, enhance);
+
+    const entry = await createMetadata(originalBuffer, id, itemId, ext);
+    db.media.push(entry);
+    saveMeta(db);
 
     res.json({
-      message: 'Upload successful',
-      id: result.id,
-      variants: {
-        original: `/media/${result.id}?variant=original`,
-        medium: `/media/${result.id}?variant=medium`,
-        thumb: `/media/${result.id}?variant=thumb`
-      }
+      id, itemId,
+      enhanced: enhance,
+      urls: {
+        original: `/media/${id}`,
+        medium: `/media/${id}?variant=medium`,
+        thumb: `/media/${id}?variant=thumb`
+      },
+      width: entry.width,
+      height: entry.height,
+      size: entry.size
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Upload failed' });
+    console.error('upload error:', err);
+    res.status(500).json({ error: 'internal error' });
   }
 });
+
+
 
 app.listen(PORT, ()=>console.log(`Media Service running at http://localhost:${PORT}`));
