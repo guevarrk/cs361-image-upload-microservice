@@ -196,10 +196,6 @@ fetch('/image/upload', {
     |  
     ├── .env # Environment variables (not committed)  
     |  
-    ├── utils/  
-    │    └── imageProcessor.js
-    │    └── metadata.js
-    |  
     ├── data/  
     │    └── media.json # Image metadata storage  
     |  
