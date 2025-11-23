@@ -11,7 +11,13 @@ const { v4: uuidv4 } = require('uuid');
 const mime = require('mime');
 
 const app = express();
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+//app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+
+// to allow proxy requests
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
