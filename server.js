@@ -14,9 +14,11 @@ const mime = require('mime');
 const app = express();
 //app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 
-// to allow proxy requests
+// to allow proxy requests and dynamic origins
 app.use(cors({
-  origin: true,
+  origin: (origin, cb) => cb(null, true),
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Accept'],
   credentials: true
 }));
 
@@ -174,6 +176,13 @@ app.post('/media/upload', upload.single('photo'), async (req, res) => {
     const { id, ext } = generateIdAndExt(req.file);
 
     const originalBuffer = await createOriginal(req.file, ext, enhance);
+
+    // Save original file to storage/original
+    await fs.writeFile(
+      path.join(STORAGE.original, `${id}.${ext}`),
+      originalBuffer
+    );
+
     await createMedium(originalBuffer, id, ext, enhance);
     await createThumb(originalBuffer, id, ext, enhance);
 
